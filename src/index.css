@@ -1,0 +1,33 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+    background: linear-gradient(
+        to top,
+        rgba(46, 94, 109, 0.4) 40%,
+        rgba(46, 94, 109, 0)
+      );
+      font-family: "Poppins", sans-serif;
+}
+
+.bouncing-pin {
+  animation-name: bounce;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-duration: 1s;
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
