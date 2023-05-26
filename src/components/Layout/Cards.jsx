@@ -1,6 +1,6 @@
-import Single from '../assets/images/single.png'
-import Double from '../assets/images/double.png'
-import Triple from '../assets/images/triple.png'
+import Single from '../../assets/images/single.png'
+import Double from '../../assets/images/double.png'
+import Triple from '../../assets/images/triple.png'
 
 
 export default function Cards() {

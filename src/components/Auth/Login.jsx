@@ -1,14 +1,18 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faGoogle, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { fetchSignIn } from '../../helpers/ApiCalls';
 import "./Home.css";
+import { ApiContext } from '../../context/ApiContext';
+import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
+
 
 export default function Login() {
 
     const navigate = useNavigate();
+    const { user } = useContext(ApiContext)
     const [errorMessage, setErrorMessage] = useState([]);
     const { register, handleSubmit, reset } = useForm();
 
@@ -23,6 +27,7 @@ export default function Login() {
             try {
                 let checkData = await fetchSignIn(data);
                 if (checkData.status === 200) {
+                    sessionStorage.setItem("user", JSON.stringify(checkData.data.user));
                     navigate("/e-Rescue", { replace: true });
                 }
             } catch (e) {
@@ -34,33 +39,39 @@ export default function Login() {
 
     return (
         <div className="form-container login-container">
-            <form className='bg-[#fff] flex flex-col items-center justify-center py-0 px-[50px] h-full text-center' onSubmit={handleSubmit((data) => {
+            <form className='bg-[#fff] flex flex-col items-center justify-center px-52 h-full text-center' onSubmit={handleSubmit((data) => {
                 handleSignIn(data); reset({ password: "" });
             })} >
                 <h1 className="font-bold m-0 mb-[24px] text-3xl mt-24">Login</h1>
                 <p className="text-red-600">{errorMessage}</p>
-                <input
-                    {...register('email')}
-                    className='bg-[#eee] rounded-lg border-none py-[12px] px-[15px] my-[12px] mx-[0px] w-[60%] focus:outline-[#4bb6b7]'
-                    type="email"
-                    placeholder="Email"
-                />
-                <input
-                    {...register('password')}
-                    className='bg-[#eee] rounded-lg border-none py-[12px] px-[15px] my-[12px] mx-[0px] w-[60%] focus:outline-[#4bb6b7]'
-                    type="password"
-                    placeholder="Password"
-                />
-                <div className="flex justify-around w-[60%] h-[50px] items-center">
+                <div className="flex relative w-full">
+                    <FontAwesomeIcon icon={faEnvelope} className="absolute top-7 pl-3 text-gray-500 text-xl  " />
+                    <input
+                        {...register('email')}
+                        className='bg-[#eee] rounded-lg border-l-4 border-black py-3 px-10 my-3 w-full focus:outline-[#4bb6b7]'
+                        type="email"
+                        placeholder="Email"
+                    />
+                </div>
+                <div className="flex relative w-full">
+                    <FontAwesomeIcon icon={faLock} className="absolute top-7 pl-3 text-gray-500 text-xl" />
+                    <input
+                        {...register('password')}
+                        className='bg-[#eee] rounded-lg border-l-4 border-black py-3 px-10 my-3 w-full focus:outline-[#4bb6b7]'
+                        type="password"
+                        placeholder="Password"
+                    />
+                </div>
+                <div className="flex justify-around w-full h-[50px] items-center">
                     <div className="flex items-center justify-center">
-                        <input className="accent-[#333] w-[12px] h-[12px] hover:text-[#4bb6b7]" type="checkbox" name="checkbox" id="checkbox" />
+                        <input className="accent-[#333] w-3 h-3 hover:text-[#4bb6b7]" type="checkbox" name="checkbox" id="checkbox" />
                         <label className="select-none pl-[5px]">Remember me</label>
                     </div>
                     <div className="pass-link">
                         <label className='hover:text-[#4bb6b7]'>Forgot password?</label>
                     </div>
                 </div>
-                <button className="relative rounded-[20px] border-2 border-[#4bb6b7] bg-[#4bb6b7] text-[#fff] text-base font-bold m-[10px] py-[12px] px-[80px] tracking-[1px] capitalize ease-in-out duration-300 hover:tracking-[3px] active:scale-[0.95] focus:outline-none">Login</button>
+                <button className="relative rounded-[20px] border-2 border-[#4bb6b7] bg-[#4bb6b7] text-[#fff] text-base font-bold m-[10px] py-3 px-[80px] tracking-[1px] capitalize ease-in-out duration-300 hover:tracking-[3px] active:scale-[0.95] focus:outline-none">Login</button>
                 <span>or use your account</span>
                 <div className="my-[20px] mx-0 ">
                     <FontAwesomeIcon icon={faFacebook} className='inline-flex rounded-[50%] w-[40px] h-[40px] my-0 mx-[5px] items-center justify-center hover:ease-in-out duration-300 text-white bg-black hover:border hover:border-[#00f6fb]' />

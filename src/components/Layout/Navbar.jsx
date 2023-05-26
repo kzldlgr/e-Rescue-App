@@ -4,8 +4,10 @@ export default function Navbar() {
 
 	return (
 		<>
-			<div className='flex justify-start items-center h-24 max-w-[1240px] mx-auto px-4 text-white z-50'>
-				<h1 className='w-full text-3xl font-bold text-[#4bb6b7] md:ml-10'>e-Rescue</h1>
+			<div className='absolute top-0 left-0 w-full z-20'>
+				<div className='max-w-[1240px] mx-auto grid md:grid-cols-2'>
+
+				</div>
 			</div>
 		</>
 	)
