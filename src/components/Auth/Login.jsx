@@ -1,37 +1,55 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faGoogle, faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import { fetchSignIn } from '../../helpers/ApiCalls';
+import { fetchSignIn, saveCoords } from '../../helpers/ApiCalls';
 import "./Home.css";
 import { ApiContext } from '../../context/ApiContext';
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
-
+import { ClientContext } from '../../context/ClientContext';
 
 export default function Login() {
 
     const navigate = useNavigate();
-    const { user } = useContext(ApiContext)
+    const { setUser, setAuth } = useContext(ApiContext)
+    const { setAddress,userCoords } = useContext(ClientContext)
     const [errorMessage, setErrorMessage] = useState([]);
     const { register, handleSubmit, reset } = useForm();
 
+    console.log(userCoords)
+
     const handleSignIn = useCallback(async (data) => {
         setErrorMessage([]);
-
-        if (data.email === "") {
-            setErrorMessage("Username can't be blank")
+        const body = {
+            email: data.email,
+            latitude: userCoords.latitude,
+            longitude: userCoords.longitude,
+            status: true
+        };
+        console.log(body)
+        if (data.email === "" && data.password === "") {
+            setErrorMessage({
+                email: `Email can't be blank`,
+                password: `Password can't be blank`
+            })
+        } else if (data.email === "") {
+            setErrorMessage({ email: "Email can't be blank" })
         } else if (data.password === "") {
-            setErrorMessage("Password can't be blank")
+            setErrorMessage({ password: "Password can't be blank" })
         } else {
             try {
                 let checkData = await fetchSignIn(data);
                 if (checkData.status === 200) {
-                    sessionStorage.setItem("user", JSON.stringify(checkData.data.user));
+                    setAuth(JSON.parse(sessionStorage.getItem("auth")))
+                    setUser(JSON.parse(sessionStorage.getItem("user")))
+                    setAddress(JSON.parse(sessionStorage.getItem("currentLocation")))
+                    console.log(body)
+                    saveCoords(body)
                     navigate("/e-Rescue", { replace: true });
                 }
             } catch (e) {
-                setErrorMessage(e.response.data.errors);
+                setErrorMessage({ error: e.response.data.errors });
             }
         }
     }, []);
@@ -39,28 +57,30 @@ export default function Login() {
 
     return (
         <div className="form-container login-container">
-            <form className='bg-[#fff] flex flex-col items-center justify-center px-52 h-full text-center' onSubmit={handleSubmit((data) => {
+            <form className='bg-[#fff] flex flex-col items-center justify-center px-52 h-full text-center gap-2' onSubmit={handleSubmit((data) => {
                 handleSignIn(data); reset({ password: "" });
             })} >
                 <h1 className="font-bold m-0 mb-[24px] text-3xl mt-24">Login</h1>
-                <p className="text-red-600">{errorMessage}</p>
-                <div className="flex relative w-full">
+                <div className="flex-col relative w-full">
                     <FontAwesomeIcon icon={faEnvelope} className="absolute top-7 pl-3 text-gray-500 text-xl  " />
                     <input
                         {...register('email')}
-                        className='bg-[#eee] rounded-lg border-l-4 border-black py-3 px-10 my-3 w-full focus:outline-[#4bb6b7]'
+                        className={errorMessage.email ? 'bg-[#eee] rounded-lg border-l-4 border-red-500 border py-3 px-10 my-3 w-full focus:outline-[#4bb6b7] focus:border-[#4bb6b7]' : 'bg-[#eee] rounded-lg border-l-4 border-black py-3 px-10 my-3 w-full focus:outline-[#4bb6b7] focus:border-none'}
                         type="email"
                         placeholder="Email"
                     />
+                    <p className="text-red-500 m-0">{errorMessage.email ? errorMessage.email : ""}</p>
                 </div>
-                <div className="flex relative w-full">
+                <div className="flex-col relative w-full mt-5">
                     <FontAwesomeIcon icon={faLock} className="absolute top-7 pl-3 text-gray-500 text-xl" />
                     <input
                         {...register('password')}
-                        className='bg-[#eee] rounded-lg border-l-4 border-black py-3 px-10 my-3 w-full focus:outline-[#4bb6b7]'
+                        className={errorMessage.password ? 'bg-[#eee] rounded-lg border-l-4 border-red-500 border py-3 px-10 my-3 w-full focus:outline-[#4bb6b7] focus:border-[#4bb6b7]' : 'bg-[#eee] rounded-lg border-l-4 border-black py-3 px-10 my-3 w-full focus:outline-[#4bb6b7] focus:border-none'}
                         type="password"
                         placeholder="Password"
                     />
+                    <p className="text-red-500 m-0">{errorMessage.password ? errorMessage.password : ""}</p>
+                    <p className="text-red-500 m-0">{errorMessage.error ? errorMessage.error : ""}</p>
                 </div>
                 <div className="flex justify-around w-full h-[50px] items-center">
                     <div className="flex items-center justify-center">

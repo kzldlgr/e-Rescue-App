@@ -1,17 +1,17 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import Map from './Layout/Map'
 import Sidebar from './Layout/Sidebar/Sidebar'
 import Reports from './Layout/Reports/Reports'
 import { ApiContext } from '../context/ApiContext'
 import Profile from './Layout/User/Profile'
+import { ClientContext } from '../context/ClientContext'
 
 export default function ERescue() {
 
-  const { setUser } = useContext(ApiContext);
-
-  useEffect(() => {
-    setUser(JSON.parse(sessionStorage.getItem("user")))
-  }, [])
+  const { user, auth } = useContext(ApiContext);
+  const { initialView } = useContext(ClientContext)
+  
+  console.log(initialView)
 
   return (
     <div className='relative'>

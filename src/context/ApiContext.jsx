@@ -4,17 +4,23 @@ export const ApiContext = createContext({});
 
 export const ApiContextProvider = ({ children }) => {
 
-    const [user, setUser] = useState(JSON.parse(sessionStorage.getItem("user"))
-    );
-    const [auth, setAuth] = useState(JSON.parse(sessionStorage.getItem("Auth")))
-
-    useEffect(() => {
-        setUser(JSON.parse(sessionStorage.getItem("user")));
-        setAuth(JSON.parse(sessionStorage.getItem("Auth")))
-    }, []);
-
+    const [user, setUser] = useState(sessionStorage.getItem("user") === null ? [] : JSON.parse(sessionStorage.getItem("user")));
+    const [auth, setAuth] = useState(JSON.parse(sessionStorage.getItem("auth")));
+    const [onlineUsers, setOnlineUsers] = useState([]);
+    const updateUser = (updatedUser) => {
+        sessionStorage.setItem("user", JSON.stringify(updatedUser));
+        setUser(updatedUser);
+    }
     return (
-        <ApiContext.Provider value={{ user, setUser, auth, setAuth }}>
+        <ApiContext.Provider value={{
+            user,
+            setUser,
+            auth,
+            setAuth,
+            updateUser,
+            onlineUsers,
+            setOnlineUsers
+        }}>
             {children}
         </ApiContext.Provider>
     )

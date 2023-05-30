@@ -38,15 +38,19 @@ export default function Register() {
         setPanel(false)
       } else if (data.confirmpassword === "") {
         setConfirmPassword(`Confirmation can't be blank`);
-      } else {
+      } else if (data.confirmpassword !== data.password) {
         setConfirmPassword("Confirmation not match");
+      } else {
+        setConfirmPassword('')
       }
     } catch (e) {
       setErrorMessage(e.response.data.errors);
       if (data.confirmpassword === "") {
         setConfirmPassword(`Confirmation can't be blank`);
-      } else {
+      } else if (data.confirmpassword !== data.password) {
         setConfirmPassword("Confirmation not match");
+      } else {
+        setConfirmPassword('')
       }
     }
   }, []);
@@ -58,67 +62,70 @@ export default function Register() {
 
         <div className="flex relative w-full gap-4">
           <div className="flex-col w-full">
-            <p className="text-red-600">{errorMessage.first_name ? `First name ${errorMessage.first_name}` : ``}</p>
             <input
               {...register("firstName")}
               placeholder="First Name"
-              className='bg-[#eee] rounded-lg border-l-4 border-black py-3 px-[15px] my-3 w-full focus:outline-[#318167]'
+              className={errorMessage.first_name ? 'bg-[#eee] rounded-lg border-l-4 border-red-500 border py-3 px-[15px] my-3 w-full focus:outline-[#4bb6b7] focus:border-[#4bb6b7]' : 'bg-[#eee] rounded-lg border-l-4 border-black py-3 px-[15px] my-3 w-full focus:outline-[#318167] focus:border-none'}
             />
+            <p className="text-red-600">{errorMessage.first_name ? `First name ${errorMessage.first_name}` : ``}</p>
           </div>
 
           <div className="flex-col w-full">
-            <p className="text-red-600">{errorMessage.last_name ? `Last name ${errorMessage.last_name}` : ``}</p>
             <input
               {...register("lastName")}
               placeholder="Last Name"
-              className='bg-[#eee] rounded-lg border-l-4 border-black py-3 px-[15px] my-3 w-full focus:outline-[#318167]'
+              className={errorMessage.last_name ? 'bg-[#eee] rounded-lg border-l-4 border-red-500 border py-3 px-[15px] my-3 w-full focus:outline-[#4bb6b7] focus:border-[#4bb6b7]' : 'bg-[#eee] rounded-lg border-l-4 border-black py-3 px-[15px] my-3 w-full focus:outline-[#318167] focus:border-none'}
             />
+            <p className="text-red-600">{errorMessage.last_name ? `Last name ${errorMessage.last_name}` : ``}</p>
           </div>
         </div>
 
-        <p className="text-red-600">{errorMessage.email ? `Email ${errorMessage.email}` : ``}</p>
-        <div className="flex relative w-full">
+        <div className="flex-col relative w-full">
           <FontAwesomeIcon icon={faEnvelope} className="absolute top-7 pl-3 text-gray-500 text-xl" />
           <input
             {...register("email")}
             placeholder="Email"
             type="email"
-            className='bg-[#eee] rounded-lg border-l-4 border-black py-3 px-10 my-3 w-full focus:outline-[#318167]'
+            className={errorMessage.email ? 'bg-[#eee] rounded-lg border-l-4 border-red-500 border py-3 px-10 my-3 w-full focus:outline-[#4bb6b7] focus:border-[#4bb6b7]' : 'bg-[#eee] rounded-lg border-l-4 border-black py-3 px-10 my-3 w-full focus:outline-[#318167] focus:border-none'}
           />
+          <p className="text-red-600">{errorMessage.email ? `Email ${errorMessage.email}` : ``}</p>
         </div>
 
-        <p className="text-red-600">{errorMessage.mobile_no ? `Mobile No. ${errorMessage.mobile_no}` : ``}</p>
-        <div className="flex relative w-full">
+
+        <div className="flex-col relative w-full">
           <span className="absolute top-0 pl-2 text-gray-500 text-md">+63</span>
           <input
             {...register("mobileNo")}
             type="tel"
-            className='bg-[#eee] rounded-lg border-l-4 border-black py-3 px-10 my-3 w-full focus:outline-[#318167]'
-            pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
+            placeholder="Mobile No."
+            className={errorMessage.mobile_no ? 'bg-[#eee] rounded-lg border-l-4 border-red-500 border py-3 px-10 my-3 w-full focus:outline-[#4bb6b7] focus:border-[#4bb6b7]' : 'bg-[#eee] rounded-lg border-l-4 border-black py-3 px-10 my-3 w-full focus:outline-[#318167] focus:border-none'}
           />
+          <p className="text-red-600">{errorMessage.mobile_no ? `Mobile No. ${errorMessage.mobile_no}` : ``}</p>
         </div>
 
-        <p className="text-red-600">{errorMessage.password_digest ? `Password ${errorMessage.password_digest}` : ``}</p>
-        <div className="flex relative w-full">
+
+        <div className="flex-col relative w-full">
           <FontAwesomeIcon icon={faLock} className="absolute top-7 pl-3 text-gray-500 text-xl" />
           <input
             {...register("password")}
             placeholder="Password"
             minLength="8"
             type="password"
-            className='bg-[#eee] rounded-lg border-l-4 border-black py-3 px-10 my-3 w-full focus:outline-[#318167]'
+            className={errorMessage.password_digest ? 'bg-[#eee] rounded-lg border-l-4 border-red-500 border py-3 px-10 my-3 w-full focus:outline-[#4bb6b7] focus:border-[#4bb6b7]' : 'bg-[#eee] rounded-lg border-l-4 border-black py-3 px-10 my-3 w-full focus:outline-[#318167] focus:border-none'}
           />
+          <p className="text-red-600">{errorMessage.password_digest ? `Password ${errorMessage.password_digest}` : ``}</p>
         </div>
 
-        <p className="text-red-600">{confirmPassword}</p>
-        <div className="flex relative w-full">
+
+        <div className="flex-col relative w-full">
           <FontAwesomeIcon icon={faLock} className="absolute top-7 pl-3 text-gray-500 text-xl" />
           <input
             {...register("confirmpassword")}
             placeholder="Password confirmation"
             type="password"
-            className='bg-[#eee] rounded-lg border-l-4 border-black py-3 px-10 my-3 w-full focus:outline-[#318167]'
+            className={confirmPassword ? 'bg-[#eee] rounded-lg border-l-4 border-red-500 border py-3 px-10 my-3 w-full focus:outline-[#4bb6b7] focus:border-[#4bb6b7]' : 'bg-[#eee] rounded-lg border-l-4 border-black py-3 px-10 my-3 w-full focus:outline-[#318167] focus:border-none'}
           />
+          <p className="text-red-600">{confirmPassword}</p>
         </div>
 
         <button
