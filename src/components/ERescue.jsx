@@ -11,7 +11,6 @@ export default function ERescue() {
   const { user, auth } = useContext(ApiContext);
   const { initialView } = useContext(ClientContext)
   
-  console.log(initialView)
 
   return (
     <div className='relative'>

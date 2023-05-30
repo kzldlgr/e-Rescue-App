@@ -15,7 +15,7 @@ export default function Reports() {
   const { user, auth } = useContext(ApiContext);
   const [guid, setGuid] = useState("");
   const [toggleRequest, setToggleRequest] = useState(false)
-  const { address, userCoords, setPing, ping, setInitialView, setReports } = useContext(ClientContext)
+  const { address, userCoords, setPing, ping, setInitialView, reports, setReports } = useContext(ClientContext)
   const [errorMessage, setErrorMessage] = useState([]);
   const [newReport, setNewReport] = useState();
   const { register, handleSubmit, reset } = useForm({
@@ -28,6 +28,7 @@ export default function Reports() {
     }
   })
 
+
   ws.onopen = () => {
     console.log("Connected to websocket server")
     setGuid(Math.random().toString(36).substring(2, 15));
@@ -37,13 +38,27 @@ export default function Reports() {
         command: "subscribe",
         identifier: JSON.stringify({
           id: guid,
-          channel: "ReportsChannel"
+          channel: "ReportsChannel",
+          message: reports
         }),
       })
     )
   }
 
-  console.log(newReport)
+  ws.onmessage = (e) => {
+    const data = JSON.parse(e.data);
+    const report = data.message;
+    console.log(report)
+    console.log(data)
+    console.log("Hello")
+    if (data.type === "ping") return;
+    if (data.type === "welcome") return;
+    if (data.type === "confirms_subscription") return;
+
+
+    setReports([...report, report])
+  }
+
 
   useEffect(() => {
     fetchReports();
@@ -57,7 +72,7 @@ export default function Reports() {
     }
     const response = await axios.get('http://localhost:3000/api/v1/reports', config);
     const data = response.data;
-    setReports(data)
+    setReports(data.filter((repe) => repe.user_id !== user.id))
   }
 
 
@@ -97,7 +112,7 @@ export default function Reports() {
   const cancelSubmit = async () => {
     await cancelReport(newReport, auth)
     setPing(false)
-
+    fetchReports();
   }
   return (
     <>
@@ -161,13 +176,13 @@ export default function Reports() {
             >Send request now
             </button>
           }
-        {ping ?
-          <label
-            className='relative rounded-[20px] border-2 border-[#4bb6b7] bg-[#4bb6b7] text-[#fff] text-base font-bold py-[10px] px-[80px]  tracking-[1px] capitalize ease-in-out duration-300 hover:tracking-[3px] active:scale-[0.95] focus:outline-none'
-            onClick={cancelSubmit}
-          >Cancel
-          </label>
-          : <div></div>}
+          {ping ?
+            <label
+              className='relative rounded-[20px] border-2 border-[#4bb6b7] bg-[#4bb6b7] text-[#fff] text-base font-bold py-[10px] px-[80px]  tracking-[1px] capitalize ease-in-out duration-300 hover:tracking-[3px] active:scale-[0.95] focus:outline-none'
+              onClick={cancelSubmit}
+            >Cancel
+            </label>
+            : <div></div>}
         </form>
 
       </div>

@@ -13,12 +13,9 @@ const ws = new WebSocket("ws://localhost:3000/cable")
 
 export default function Map() {
 
-    const { userCoords, ping, initialView, setInitialView, reports } = useContext(ClientContext);
+    const { userCoords, ping, initialView, setInitialView, reports, setReports } = useContext(ClientContext);
     const { auth, onlineUsers, setOnlineUsers, user } = useContext(ApiContext);
     const [guid, setGuid] = useState("");
-
-
-    console.log(onlineUsers)
 
     ws.onopen = () => {
         console.log("Connected to websocket server")
@@ -98,11 +95,10 @@ export default function Map() {
                             >
                             </Marker>)
                     })} */}
-
-                    {/* <GeolocateControl
-                        position='top-right'
-                        showAccuracyCircle
-                        onGeolocate={(e) => { setInitialView({ latitude: e.coords.latitude, longitude: e.coords.longitude, zoom: 18 }) }}
+                    {/* 
+                    <GeolocateControl
+                        position='center'
+                        onGeolocate={(e) => { setInitialView({ latitude: e.coords.latitude, longitude: e.coords.longitude, zoom: 16 }) }}
                     /> */}
                 </ReactMapGL>
             </div>
