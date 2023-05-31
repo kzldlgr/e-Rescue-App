@@ -53,15 +53,60 @@ export const saveCoords = async (body) => {
 
 export const cancelReport = async (body, auth) => {
 
-  const res = await axios.delete(`${baseURL}/reports`, {
+  const res = await axios.delete(`${baseURL}reports`, {
     headers: {
       Authorization: auth
     },
     data: {
-      id: body
+      id: body.id
     }
   });
   return res;
 }
 
+export const updateResponder = async (body, auth) => {
+  let config = {
+    headers: {
+      'Authorization': auth,
+    }
+  }
+  const res = await axios.patch(`${baseURL}reports/respond`, body, config)
+  return res;
+}
 
+
+export const fetchReports = async (user, auth) => {
+  let config = {
+    headers: {
+      'Authorization': auth,
+    }
+  }
+  const response = await axios.get(`${baseURL}reports`, config);
+  const data = response.data;
+  const userFilter = data.filter((repe) => repe.user_id !== user.id)
+  const statusFilter = userFilter.filter((repe) => repe.status === false)
+  return statusFilter
+}
+
+export const getHistory = async (header) => {
+  let config = {
+    headers: {
+      'Authorization': header,
+    }
+  }
+  const response = await axios.get(`${baseURL}user/history`, config);
+  sessionStorage.setItem("history", JSON.stringify(response.data))
+  return response
+}
+
+
+export const fetchUsers = async (auth) => {
+  let config = {
+    headers: {
+      'Authorization': auth,
+    }
+  }
+  const response = await axios.get(`${baseURL}user/loc`, config);
+  const data = response.data;
+  return data
+}

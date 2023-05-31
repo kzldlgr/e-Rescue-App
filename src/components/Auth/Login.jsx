@@ -3,21 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faGoogle, faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import { fetchSignIn, saveCoords } from '../../helpers/ApiCalls';
+import { fetchSignIn, fetchUsers, getHistory, saveCoords } from '../../helpers/ApiCalls';
 import "./Home.css";
 import { ApiContext } from '../../context/ApiContext';
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import { ClientContext } from '../../context/ClientContext';
 
+
+
 export default function Login() {
 
     const navigate = useNavigate();
-    const { setUser, setAuth } = useContext(ApiContext)
-    const { setAddress,userCoords } = useContext(ClientContext)
+    const { setUser, setAuth, user, auth, onlineUsers, setOnlineUsers } = useContext(ApiContext)
+    const { setAddress, userCoords, setHistory } = useContext(ClientContext)
     const [errorMessage, setErrorMessage] = useState([]);
     const { register, handleSubmit, reset } = useForm();
-
-    console.log(userCoords)
 
     const handleSignIn = useCallback(async (data) => {
         setErrorMessage([]);
@@ -27,7 +27,6 @@ export default function Login() {
             longitude: userCoords.longitude,
             status: true
         };
-        console.log(body)
         if (data.email === "" && data.password === "") {
             setErrorMessage({
                 email: `Email can't be blank`,
@@ -41,10 +40,12 @@ export default function Login() {
             try {
                 let checkData = await fetchSignIn(data);
                 if (checkData.status === 200) {
+                    let header = checkData.headers.get('Authorization')
                     setAuth(JSON.parse(sessionStorage.getItem("auth")))
                     setUser(JSON.parse(sessionStorage.getItem("user")))
                     setAddress(JSON.parse(sessionStorage.getItem("currentLocation")))
-                    console.log(body)
+                    const history = await getHistory(header)
+                    setHistory(history.data)
                     saveCoords(body)
                     navigate("/e-Rescue", { replace: true });
                 }

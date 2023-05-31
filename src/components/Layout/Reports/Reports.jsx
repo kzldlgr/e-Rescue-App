@@ -5,19 +5,18 @@ import { faX } from "@fortawesome/free-solid-svg-icons";
 import { ApiContext } from "../../../context/ApiContext";
 import { ClientContext } from "../../../context/ClientContext";
 import { useForm } from "react-hook-form";
-import axios from 'axios';
-import { cancelReport, sendReport } from "../../../helpers/ApiCalls";
+import { cancelReport, fetchReports, getHistory, sendReport } from "../../../helpers/ApiCalls";
 
 const ws = new WebSocket("ws://localhost:3000/cable")
 
 export default function Reports() {
 
   const { user, auth } = useContext(ApiContext);
-  const [guid, setGuid] = useState("");
   const [toggleRequest, setToggleRequest] = useState(false)
-  const { address, userCoords, setPing, ping, setInitialView, reports, setReports } = useContext(ClientContext)
+  const { address, userCoords, setPing, ping, setInitialView, setReports, setHistory } = useContext(ClientContext)
   const [errorMessage, setErrorMessage] = useState([]);
   const [newReport, setNewReport] = useState();
+  const [guid, setGuid] = useState();
   const { register, handleSubmit, reset } = useForm({
     defaultValues: {
       address: address.Match_addr,
@@ -30,7 +29,7 @@ export default function Reports() {
 
 
   ws.onopen = () => {
-    console.log("Connected to websocket server")
+    console.log("Connected to websocket server / Reports Channel")
     setGuid(Math.random().toString(36).substring(2, 15));
 
     ws.send(
@@ -38,8 +37,8 @@ export default function Reports() {
         command: "subscribe",
         identifier: JSON.stringify({
           id: guid,
-          channel: "ReportsChannel",
-          message: reports
+          channel: "ReportsChannel"
+
         }),
       })
     )
@@ -47,34 +46,27 @@ export default function Reports() {
 
   ws.onmessage = (e) => {
     const data = JSON.parse(e.data);
-    const report = data.message;
-    console.log(report)
-    console.log(data)
-    console.log("Hello")
     if (data.type === "ping") return;
     if (data.type === "welcome") return;
     if (data.type === "confirms_subscription") return;
-
-
-    setReports([...report, report])
-  }
-
-
-  useEffect(() => {
-    fetchReports();
-  }, [])
-
-  const fetchReports = async () => {
-    let config = {
-      headers: {
-        'Authorization': auth,
+    if (data.identifier) {
+      if (data.message) {
+        const message = data.message;
+        setReports([{ ...message, message }])
       }
     }
-    const response = await axios.get('http://localhost:3000/api/v1/reports', config);
-    const data = response.data;
-    setReports(data.filter((repe) => repe.user_id !== user.id))
   }
 
+  useEffect(() => {
+    fetch();
+  }, [])
+
+  const fetch = async () => {
+    const res = await fetchReports(user, auth);
+    const history = await getHistory(auth)
+    setHistory(history.data)
+    setReports(res)
+  }
 
 
   const submitForm = useCallback(async (data) => {
@@ -92,7 +84,8 @@ export default function Reports() {
       }
       if (data.vehicle && data.mobileNo && data.description) {
         const res = await sendReport(auth, body)
-        setNewReport(res.data.report.id)
+        fetch();
+        setNewReport(res.data.report)
         setPing(true)
         setToggleRequest(false)
         setErrorMessage({})
@@ -116,15 +109,15 @@ export default function Reports() {
   }
   return (
     <>
-      <div className='absolute bottom-0 right-0 mb-10 mr-10 text-center justify-center z-30'>
+      <div className='absolute bottom-0 right-0 mb-10 mr-10 text-center justify-center z-30 '>
         <button className={toggleRequest ? 'hidden' : 'relative rounded-[20px] border-2 border-[#4bb6b7] bg-[#4bb6b7] text-[#fff] text-base font-bold m-[10px] py-3 px-[80px] tracking-[1px] ease-in-out duration-300 hover:tracking-[3px] active:scale-[0.95] focus:outline-none'}
           onClick={() => { setToggleRequest(!toggleRequest) }}
         >{ping ? 'Looking for responder nearby' : 'Request'}
         </button>
       </div>
-      <div className={toggleRequest ? 'fixed inset-x-0 bottom-0 mb-10 mr-96 m-auto w-[800px] text-center justify-center rounded-lg ease-in-out duration-500' : 'fixed left-[100%]'}>
+      <div className={toggleRequest ? 'fixed inset-x-0 bottom-0 mb-10 mr-96 m-auto w-[800px] text-center justify-center rounded-lg ease-in-out duration-500 text-black' : 'fixed left-[100%]'}>
         <div onClick={() => { setToggleRequest(!toggleRequest) }}>
-          <FontAwesomeIcon icon={faX} className="absolute right-[-0] p-2" />
+          <FontAwesomeIcon icon={faX} className="absolute right-[-0] p-2 " />
         </div>
         <form className="rounded-lg border border-[#4bb6b7] bg-[#fff] shadow-2xl p-10 m-auto" onSubmit={handleSubmit(submitForm)}>
           <label className="text-[#4bb6b7] text-2xl">Ask for responders near by...</label>

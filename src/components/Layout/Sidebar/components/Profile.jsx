@@ -1,15 +1,15 @@
 import { useCallback, useContext, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ApiContext } from "../../../context/ApiContext";
-import { ClientContext } from "../../../context/ClientContext";
-import Avatar from '../../../assets/images/avatar2.png'
+import { ApiContext } from "../../../../context/ApiContext";
+import { ClientContext } from "../../../../context/ClientContext";
+import Avatar from '../../../../assets/images/avatar2.png'
 import { faArrowLeft, faCamera, faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import { useForm } from "react-hook-form";
-import { patchProfile } from "../../../helpers/ApiCalls";
+import { patchProfile } from "../../../../helpers/ApiCalls";
 
 export default function Profile() {
 
-  const { profilePanel, setProfilePanel, setPanel } = useContext(ClientContext)
+  const { profilePanel, setProfilePanel, setSidePanel, sidePanel } = useContext(ClientContext)
   const { user, auth, updateUser } = useContext(ApiContext)
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState([]);
@@ -21,7 +21,6 @@ export default function Profile() {
       mobileNo: user.mobile_no,
     }
   });
-
 
   const submitForm = useCallback(async (data) => {
     setConfirmPassword("");
@@ -51,7 +50,7 @@ export default function Profile() {
           password: "",
           confirmpassword: "",
         });
-        setPanel(false)
+        setSidePanel(false)
         setProfilePanel(false)
       } else {
         setConfirmPassword('')
@@ -77,14 +76,15 @@ export default function Profile() {
       <div className={profilePanel ? 'fixed left-0 top-0 w-[35%] h-full border-r border-r-white bg-[#fafffa] ease-in-out duration-300  max-md:left-[-100%] z-20' : 'fixed left-[-100%]'}>
         <div className='flex flex-col h-[250px] bg-[#4bb6b7]'>
           <div className='relative m-atuo w-[10%] pl-6 hover:translate-x-3 text-black ' onClick={() => {
-            setProfilePanel(!profilePanel), reset({
-              password: "",
-              confirmpassword: "",
-              firstName: user.first_name,
-              lastName: user.last_name,
-              email: user.email,
-              mobileNo: user.mobile_no
-            });
+            setProfilePanel(!profilePanel),
+              setSidePanel(!sidePanel), reset({
+                password: "",
+                confirmpassword: "",
+                firstName: user.first_name,
+                lastName: user.last_name,
+                email: user.email,
+                mobileNo: user.mobile_no
+              });
           }}>
             <FontAwesomeIcon icon={faArrowLeft} className="text-2xl my-5 drop-shadow-lg text-white font-bold text-start" />
           </div>

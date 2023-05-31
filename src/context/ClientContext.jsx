@@ -9,9 +9,12 @@ export const ClientContextProvider = ({ children }) => {
     const [profilePanel, setProfilePanel] = useState(false);
     const [address, setAddress] = useState(JSON.parse(sessionStorage.getItem("currentLocation")));
     const [ping, setPing] = useState(false);
+    const [sidePanel, setSidePanel] = useState(false);
     const [reports, setReports] = useState([])
+    const [historyPanel, setHistoryPanel] = useState(false);
     const [userCoords, setUserCoords] = useState(JSON.parse(sessionStorage.getItem("userCoords")) ? JSON.parse(sessionStorage.getItem("userCoords")) : {});
-    const [initialView, setInitialView] = useState(JSON.parse(sessionStorage.getItem("userCoords")) ? JSON.parse(sessionStorage.getItem("userCoords")) : {})
+    const [initialView, setInitialView] = useState(JSON.parse(sessionStorage.getItem("userCoords")) ? JSON.parse(sessionStorage.getItem("userCoords")) : {});
+    const [history, setHistory] = useState(JSON.parse(sessionStorage.getItem("history")) ? JSON.parse(sessionStorage.getItem("history")) : []);
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(async (position) => {
@@ -48,7 +51,13 @@ export const ClientContextProvider = ({ children }) => {
             initialView,
             setInitialView,
             reports,
-            setReports
+            setReports,
+            sidePanel,
+            setSidePanel,
+            historyPanel,
+            setHistoryPanel,
+            history,
+            setHistory
         }}>
             {children}
         </ClientContext.Provider>

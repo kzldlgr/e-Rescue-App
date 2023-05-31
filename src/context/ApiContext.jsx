@@ -7,10 +7,13 @@ export const ApiContextProvider = ({ children }) => {
     const [user, setUser] = useState(sessionStorage.getItem("user") === null ? [] : JSON.parse(sessionStorage.getItem("user")));
     const [auth, setAuth] = useState(JSON.parse(sessionStorage.getItem("auth")));
     const [onlineUsers, setOnlineUsers] = useState([]);
+    const [selectedReport, setSelectedReport] = useState([])
+    const [guid, setGuid] = useState("");
     const updateUser = (updatedUser) => {
         sessionStorage.setItem("user", JSON.stringify(updatedUser));
         setUser(updatedUser);
     }
+
     return (
         <ApiContext.Provider value={{
             user,
@@ -19,7 +22,11 @@ export const ApiContextProvider = ({ children }) => {
             setAuth,
             updateUser,
             onlineUsers,
-            setOnlineUsers
+            setOnlineUsers,
+            selectedReport,
+            setSelectedReport,
+            guid,
+            setGuid
         }}>
             {children}
         </ApiContext.Provider>
