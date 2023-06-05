@@ -12,13 +12,16 @@ import History from './Layout/Sidebar/components/History'
 import { ApiContext } from '../context/ApiContext'
 import { fetchUsers } from '../helpers/ApiCalls'
 
-const ws = new WebSocket("ws://localhost:3000/cable")
+const ws = new WebSocket("wss:https://e-rescue-api.onrender.com/cable")
+const MapboxToken = import.meta.env.VITE_MAP_BOX_TOKEN
 
 export default function ERescue() {
 
   const { initialView, setInitialView, reports, userCoords, ping } = useContext(ClientContext)
   const { onlineUsers, setOnlineUsers, user, auth } = useContext(ApiContext)
   const [guid, setGuid] = useState();
+
+  console.log()
 
   ws.onopen = () => {
     console.log("Connected to websocket server / User Channel")
@@ -65,7 +68,7 @@ export default function ERescue() {
       <div className='text-white z-0'>
         <ReactMapGL
           {...initialView}
-          mapboxAccessToken="pk.eyJ1Ijoia3psZGxncjI2IiwiYSI6ImNsaHNvMTNnbjMwYTIzcXBiYjJrcm1lczMifQ.DXawEG9u_BB8ITWYPZwWUQ"
+          mapboxAccessToken={MapboxToken}
           style={{ width: '100vw', height: '100vh' }}
           onMove={(e) => setInitialView(e.initialView)}
           mapStyle="mapbox://styles/kzldlgr26/clhz0f2ds00b701pg9xnybong"

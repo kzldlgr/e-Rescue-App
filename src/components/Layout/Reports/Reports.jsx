@@ -7,7 +7,7 @@ import { ClientContext } from "../../../context/ClientContext";
 import { useForm } from "react-hook-form";
 import { cancelReport, fetchReports, getHistory, sendReport } from "../../../helpers/ApiCalls";
 
-const ws = new WebSocket("ws://localhost:3000/cable")
+const ws = new WebSocket("wss:https://e-rescue-api.onrender.com/cable")
 
 export default function Reports() {
 

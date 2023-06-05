@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseURL = 'http://localhost:3000/api/v1/';
+const baseURL = 'https://e-rescue-api.onrender.com/api/v1';
 
 export const fetchSignUp = async (body) => {
   const res = await axios.post(`${baseURL}auth`, body)
