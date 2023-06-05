@@ -54,6 +54,10 @@ console.log(ws)
     }
   }
 
+  ws.onerror = (e) => {
+    console.log(e)
+  }
+
   useEffect(() => {
     fetchOnlineUsers();
   }, [])
