@@ -44,6 +44,7 @@ export default function Register() {
         setConfirmPassword('')
       }
     } catch (e) {
+      console.log(e)
       setErrorMessage(e.response.data.errors);
       if (data.confirmpassword === "") {
         setConfirmPassword(`Confirmation can't be blank`);

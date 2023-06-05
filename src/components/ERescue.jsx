@@ -17,6 +17,9 @@ const MapboxToken = import.meta.env.VITE_MAP_BOX_TOKEN
 
 export default function ERescue() {
 
+  
+console.log(ws)
+
   const { initialView, setInitialView, reports, userCoords, ping } = useContext(ClientContext)
   const { onlineUsers, setOnlineUsers, user, auth } = useContext(ApiContext)
   const [guid, setGuid] = useState();
