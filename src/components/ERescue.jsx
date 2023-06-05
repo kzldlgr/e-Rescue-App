@@ -12,7 +12,7 @@ import History from './Layout/Sidebar/components/History'
 import { ApiContext } from '../context/ApiContext'
 import { fetchUsers } from '../helpers/ApiCalls'
 
-const ws = new WebSocket("wss:https://e-rescue-api.onrender.com/cable")
+const ws = new WebSocket("wss://e-rescue-api.onrender.com/cable")
 const MapboxToken = import.meta.env.VITE_MAP_BOX_TOKEN
 
 export default function ERescue() {
