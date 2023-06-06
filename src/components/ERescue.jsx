@@ -12,13 +12,13 @@ import History from './Layout/Sidebar/components/History'
 import { ApiContext } from '../context/ApiContext'
 import { fetchUsers } from '../helpers/ApiCalls'
 
-const ws = new WebSocket("wss:https://e-rescue-api.onrender.com/cable")
+const ws = new WebSocket("wss://e-rescue-api.onrender.com/cable")
 const MapboxToken = import.meta.env.VITE_MAP_BOX_TOKEN
 
 export default function ERescue() {
 
-  
-console.log(ws)
+
+  console.log(ws)
 
   const { initialView, setInitialView, reports, userCoords, ping } = useContext(ClientContext)
   const { onlineUsers, setOnlineUsers, user, auth } = useContext(ApiContext)
@@ -39,6 +39,10 @@ console.log(ws)
         }),
       })
     )
+
+    ws.onerror = (e) => {
+      console.log(e)
+    }
   }
 
   ws.onmessage = (e) => {
@@ -54,9 +58,7 @@ console.log(ws)
     }
   }
 
-  ws.onerror = (e) => {
-    console.log(e)
-  }
+
 
   useEffect(() => {
     fetchOnlineUsers();
