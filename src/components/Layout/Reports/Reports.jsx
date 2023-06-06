@@ -11,8 +11,6 @@ const ws = new WebSocket("ws://localhost:3000/cable")
 
 export default function Reports() {
 
-  console.log(ws)
-
   const { user, auth } = useContext(ApiContext);
   const [toggleRequest, setToggleRequest] = useState(false)
   const { address, userCoords, setPing, ping, setInitialView, setReports, setHistory } = useContext(ClientContext)
@@ -33,7 +31,6 @@ export default function Reports() {
   ws.onopen = () => {
     console.log("Connected to websocket server / Reports Channel")
     setGuid(Math.random().toString(36).substring(2, 15));
-
     ws.send(
       JSON.stringify({
         command: "subscribe",
@@ -107,7 +104,7 @@ export default function Reports() {
   const cancelSubmit = async () => {
     await cancelReport(newReport, auth)
     setPing(false)
-    fetchReports();
+    fetchReports(auth);
   }
   return (
     <>
