@@ -28,7 +28,7 @@ export default function History() {
       </div>
       <div className='p-10 h-[100%]  hover:overflow-y-scroll overflow-y-hidden overflow-x-hidden scrollbar'>
           <label className="text-[#4bb6b7] text-3xl">Report history</label>
-          {history !== [] && history.map((hist) => {
+          {history != [] && history.map((hist) => {
             return (
               < ul className='' key={hist.id}>
                 <li className='text-sm text-end'>{hist.created_at}</li>
