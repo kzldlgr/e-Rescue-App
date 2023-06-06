@@ -7,9 +7,11 @@ import { ClientContext } from "../../../context/ClientContext";
 import { useForm } from "react-hook-form";
 import { cancelReport, fetchReports, getHistory, sendReport } from "../../../helpers/ApiCalls";
 
-const ws = new WebSocket("wss://e-rescue-api.onrender.com/cable")
+const ws = new WebSocket("wss:https://e-rescue-api.onrender.com/cable")
 
 export default function Reports() {
+
+  console.log(ws)
 
   const { user, auth } = useContext(ApiContext);
   const [toggleRequest, setToggleRequest] = useState(false)
