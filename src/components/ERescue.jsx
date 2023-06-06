@@ -12,19 +12,17 @@ import History from './Layout/Sidebar/components/History'
 import { ApiContext } from '../context/ApiContext'
 import { fetchUsers } from '../helpers/ApiCalls'
 
-const ws = new WebSocket("wss://e-rescue-api.onrender.com/cable")
+const ws = new WebSocket("ws://localhost:3000/cable")
 const MapboxToken = import.meta.env.VITE_MAP_BOX_TOKEN
 
 export default function ERescue() {
 
-  
-console.log(ws)
+  console.log(ws)
 
   const { initialView, setInitialView, reports, userCoords, ping } = useContext(ClientContext)
   const { onlineUsers, setOnlineUsers, user, auth } = useContext(ApiContext)
   const [guid, setGuid] = useState();
 
-  console.log()
 
   ws.onopen = () => {
     console.log("Connected to websocket server / User Channel")
