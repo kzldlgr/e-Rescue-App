@@ -46,7 +46,6 @@ export default function ERescue() {
   }
 
   ws.onmessage = (e) => {
-    console.log(e)
     const data = JSON.parse(e.data);
     if (data.type === "ping") return;
     if (data.type === "welcome") return;
