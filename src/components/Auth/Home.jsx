@@ -16,7 +16,7 @@ export default function SignIn() {
         <Register />
         <Login />
         <div className="overlay-container">
-          <div className="overlay">
+        <div className="overlay bg-[url(src/assets/images/giphy1.gif)] bg-no-repeat bg-cover">
             <div className="overlay-panel overlay-left">
               <h1 className="text-5xl leading-10 m-0 drop-shadow-lg text-[#4bb6b7]">e-Rescue</h1>
               <p className='my-6'>if Yout have an account, login here and send help if you needed.</p>
