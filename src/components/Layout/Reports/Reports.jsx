@@ -31,13 +31,13 @@ export default function Reports() {
   ws.onopen = () => {
     console.log("Connected to websocket server / Reports Channel")
     setGuid(Math.random().toString(36).substring(2, 15));
+
     ws.send(
       JSON.stringify({
         command: "subscribe",
         identifier: JSON.stringify({
           id: guid,
           channel: "ReportsChannel"
-
         }),
       })
     )
@@ -104,8 +104,8 @@ export default function Reports() {
   const cancelSubmit = async () => {
     await cancelReport(newReport, auth)
     setPing(false)
-    fetchReports(auth);
   }
+  
   return (
     <>
       <div className='absolute bottom-0 right-0 mb-10 mr-10 text-center justify-center z-30 '>
