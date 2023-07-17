@@ -1,10 +1,12 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import Login from './Login'
 import "./Home.css"
 import Register from './Register'
 import { ClientContext } from '../../context/ClientContext'
+import Banner from '../../assets/images/giphy1.gif'
+
 
 export default function SignIn() {
 
@@ -16,7 +18,7 @@ export default function SignIn() {
         <Register />
         <Login />
         <div className="overlay-container">
-        <div className="overlay bg-[url(src/assets/images/giphy1.gif)] bg-no-repeat bg-cover">
+        <div className="overlay bg-no-repeat bg-cover" style={{ backgroundImage: `url(${Banner})` }}>
             <div className="overlay-panel overlay-left">
               <h1 className="text-5xl leading-10 m-0 drop-shadow-lg text-[#4bb6b7]">e-Rescue</h1>
               <p className='my-6'>if Yout have an account, login here and send help if you needed.</p>
