@@ -1,9 +1,9 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faGoogle, faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import { fetchSignIn, fetchUsers, getHistory, saveCoords } from '../../helpers/ApiCalls';
+import { fetchSignIn, getHistory, saveCoords } from '../../helpers/ApiCalls';
 import "./Home.css";
 import { ApiContext } from '../../context/ApiContext';
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
@@ -14,7 +14,7 @@ import { ClientContext } from '../../context/ClientContext';
 export default function Login() {
 
     const navigate = useNavigate();
-    const { setUser, setAuth, user, auth, onlineUsers, setOnlineUsers } = useContext(ApiContext)
+    const { setUser, setAuth } = useContext(ApiContext)
     const { setAddress, userCoords, setHistory } = useContext(ClientContext)
     const [errorMessage, setErrorMessage] = useState([]);
     const { register, handleSubmit, reset } = useForm();

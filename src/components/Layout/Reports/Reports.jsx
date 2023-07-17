@@ -17,7 +17,7 @@ export default function Reports() {
   const [errorMessage, setErrorMessage] = useState([]);
   const [newReport, setNewReport] = useState();
   const [guid, setGuid] = useState();
-  const { register, handleSubmit, reset } = useForm({
+  const { register, handleSubmit } = useForm({
     defaultValues: {
       address: address.Match_addr,
       mobileNo: "",
@@ -94,7 +94,7 @@ export default function Reports() {
           zoom: 16
         })
       } else {
-        const res = await sendReport(auth, body)
+        await sendReport(auth, body)
       }
     } catch (e) {
       setErrorMessage(e.response.data.errors)

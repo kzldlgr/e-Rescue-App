@@ -1,59 +1,61 @@
-import React, { useContext, useEffect, useState } from 'react'
-import Sidebar from './Layout/Sidebar/Sidebar'
-import Reports from './Layout/Reports/Reports'
-import Profile from './Layout/Sidebar/components/Profile'
-import { ClientContext } from '../context/ClientContext'
+import { useContext, useEffect } from 'react'
+import Sidebar from './Sidebar/Sidebar'
+import Reports from './Reports/Reports'
+import Profile from './Sidebar/components/Profile'
+import { ClientContext } from '../../context/ClientContext'
 import 'mapbox-gl/dist/mapbox-gl.css';
 import ReactMapGL, { Marker } from 'react-map-gl'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot, faUserTie, faWrench } from '@fortawesome/free-solid-svg-icons'
-import ReportWindow from './Layout/Reports/ReportWindow'
-import History from './Layout/Sidebar/components/History'
-import { ApiContext } from '../context/ApiContext'
-import { fetchUsers } from '../helpers/ApiCalls'
+import ReportWindow from './Reports/ReportWindow'
+import History from './Sidebar/components/History'
+import { ApiContext } from '../../context/ApiContext'
+import { fetchUsers } from '../../helpers/ApiCalls'
+import actionCable from 'actioncable'
 
-const ws = new WebSocket("ws://localhost:3000/cable")
+const CableApp = {}
+CableApp.cable = actionCable.createConsumer('wss://artconnect.onrender.com/cable')
+
 const MapboxToken = import.meta.env.VITE_MAP_BOX_TOKEN
 
 export default function ERescue() {
-
-
+  const cable = CableApp.cable
   const { initialView, setInitialView, reports, userCoords, ping } = useContext(ClientContext)
   const { onlineUsers, setOnlineUsers, user, auth } = useContext(ApiContext)
-  const [guid, setGuid] = useState();
 
+  console.log(cable)
 
-  ws.onopen = () => {
-    console.log("Connected to websocket server / User Channel")
-    setGuid(Math.random().toString(36).substring(2, 15));
+  // ws.onopen = () => {
+  //   console.log("Connected to websocket server / User Channel")
+  //   setGuid(Math.random().toString(36).substring(2, 15));
 
-    ws.send(
-      JSON.stringify({
-        command: "subscribe",
-        identifier: JSON.stringify({
-          id: guid,
-          channel: "UsersChannel"
-        }),
-      })
-    )
-  }
+  //   ws.send(
+  //     JSON.stringify({
+  //       command: "subscribe",
+  //       identifier: JSON.stringify({
+  //         id: guid,
+  //         channel: "UsersChannel"
+  //       }),
+  //     })
+  //   )
+  // }
 
-  ws.onmessage = (e) => {
-    const data = JSON.parse(e.data);
-    if (data.type === "ping") return;
-    if (data.type === "welcome") return;
-    if (data.type === "confirms_subscription") return;
-    if (data.identifier) {
-      if (data.message) {
-        const message = data.message;
-        setOnlineUsers([{ ...message, message }])
-      }
-    }
-  }
+  // ws.onmessage = (e) => {
+  //   const data = JSON.parse(e.data);
+  //   if (data.type === "ping") return;
+  //   if (data.type === "welcome") return;
+  //   if (data.type === "confirms_subscription") return;
+  //   if (data.identifier) {
+  //     if (data.message) {
+  //       const message = data.message;
+  //       setOnlineUsers([{ ...message, message }])
+  //     }
+  //   }
+  // }
 
-  ws.onerror = (e) => {
-    console.log(e)
-  }
+  // ws.onerror = (e) => {
+  //   console.log(e)
+  // }
 
   useEffect(() => {
     fetchOnlineUsers();

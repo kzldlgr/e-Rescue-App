@@ -88,9 +88,9 @@
   }
   
   .overlay {
-    /* background-image: url('src/assets/images/giphy1.gif');
+    background-image: url(https://oshahealthcare.com/wp-content/uploads/2021/04/Ambulance.gif);
     background-repeat: no-repeat;
-    background-size: cover; */
+    background-size: cover;
     background-position: 0 0;
     color: #fff;
     position: relative;

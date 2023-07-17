@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react"
+import { useCallback, useContext, useState } from "react"
 import { fetchSignUp } from '../../helpers/ApiCalls'
 import { useForm } from "react-hook-form";
 import { ClientContext } from "../../context/ClientContext";
